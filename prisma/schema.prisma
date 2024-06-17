@@ -34,3 +34,13 @@ model Order {
   client     Client   @relation(fields: [clientId], references: [id])
   clientId   String
 }
+
+model Referral {
+  id      String   @id @default(uuid())
+  name    String
+  cpf     String   @unique
+  email   String   @unique
+  friends String[]
+
+  @@map("referral")
+}

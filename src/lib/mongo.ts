@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 
-mongoose.connect('mongodb://mongodb:27017/mydb')
+mongoose.connect('mongodb://localhost:27017')
 
-const clientSchema = new mongoose.Schema({
+const referralSchema = new mongoose.Schema({
   objectID: {
     type: String,
     unique: true,
@@ -20,4 +20,4 @@ const clientSchema = new mongoose.Schema({
   friends: [String],
 })
 
-export const MongoClient = mongoose.model('MongoClient', clientSchema)
+export const MongoClient = mongoose.model('referralSchema', referralSchema)

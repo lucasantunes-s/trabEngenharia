@@ -1,6 +1,7 @@
 import { ClientsRepository } from '@/repositories/clients-repository'
 import { OrdersRepository } from '@/repositories/orders-repository'
-import { Client, Order } from '@prisma/client'
+import { ReferralRepository } from '@/repositories/referreal-repository'
+import { Client, Order, Referral } from '@prisma/client'
 
 interface RegisterUseCaseRequest {
   cpf: string
@@ -11,17 +12,20 @@ interface RegisterUseCaseRequest {
   email: string
   product: string[]
   total: number
+  friends: string[]
 }
 
 interface RegisterUseCaseResponse {
   client: Client
   order: Order
+  referral: Referral
 }
 
 export class RegisterUseCase {
   constructor(
     private clientsRepository: ClientsRepository,
     private ordersRepository: OrdersRepository,
+    private referralRepository: ReferralRepository,
   ) {}
 
   async execute({
@@ -33,6 +37,7 @@ export class RegisterUseCase {
     total,
     uf,
     address,
+    friends,
   }: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
     const client = await this.clientsRepository.create({
       address,
@@ -49,9 +54,19 @@ export class RegisterUseCase {
       product,
     })
 
+    const referral = await this.referralRepository.create({
+      cpf,
+      name,
+      friends,
+      email,
+    })
+
+    console.log('referral: ', referral)
+
     return {
       client,
       order,
+      referral,
     }
   }
 }

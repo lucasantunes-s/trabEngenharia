@@ -12,9 +12,10 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     email: z.string(),
     product: z.array(z.string()),
     total: z.number(),
+    friends: z.array(z.string()),
   })
 
-  const { address, city, cpf, email, name, product, total, uf } =
+  const { address, city, cpf, email, name, product, total, uf, friends } =
     registerBodySchema.parse(request.body)
 
   try {
@@ -29,6 +30,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       product,
       total,
       uf,
+      friends,
     })
 
     return reply.status(201).send(transaction)
