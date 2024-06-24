@@ -61,8 +61,6 @@ export class RegisterUseCase {
       email,
     })
 
-    console.log('referral: ', referral)
-
     return {
       client,
       order,

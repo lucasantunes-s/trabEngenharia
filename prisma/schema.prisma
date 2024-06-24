@@ -14,14 +14,15 @@ datasource postgresql {
 }
 
 model Client {
-  id      String  @id @default(uuid())
-  cpf     String  @unique
-  name    String
-  address String
-  city    String
-  uf      String
-  email   String
-  Order   Order[]
+  id            String          @id @default(uuid())
+  cpf           String          @unique
+  name          String
+  address       String
+  city          String
+  uf            String
+  email         String
+  Order         Order[]
+  Recomendation Recomendation[]
 
   @@map("clients")
 }
@@ -43,4 +44,14 @@ model Referral {
   friends String[]
 
   @@map("referral")
+}
+
+model Recomendation {
+  id         String   @id @default(uuid())
+  client     Client   @relation(fields: [clientId], references: [id])
+  friend_one String
+  friend_two String
+  sale       String[]
+  total      Decimal
+  clientId   String
 }
