@@ -1,20 +1,42 @@
-import { Prisma } from '@prisma/client'
-import { RecomendationsRepository } from '../recomendation-respository'
+/* eslint-disable camelcase */
+import {
+  RecomendationsRepository,
+  inputData,
+} from '../recomendation-respository'
 import { redisClient } from '@/lib/redis'
+import { randomUUID } from 'crypto'
 
 export class RedisRecomendationsRepository implements RecomendationsRepository {
-  async create(data: Prisma.RecomendationCreateInput) {
-    const client = redisClient()
-    await (
-      await client
-    ).hSet('user-session:123', {
-        friend_one: data.friend_one
-        friend_two: data.friend_two
-        sale: data.sale
-        total: data.total
-        clientId: data.client
-    })
+  async get() {
+    const clientRedis = await redisClient()
 
-    return recomendation
+    const keys = await clientRedis.keys('recommendation:*')
+    const recommendations = []
+
+    for (const key of keys) {
+      const recommendation = await clientRedis.get(key)
+      if (recommendation) {
+        recommendations.push(JSON.parse(recommendation))
+      }
+    }
+
+    return recommendations
+  }
+
+  async create({ client, friendOne, friendTwo, total, sale }: inputData) {
+    const clientRedis = await redisClient()
+
+    const recommendation = {
+      id: randomUUID(), // Ensure the id field is included
+      friendOne,
+      friendTwo,
+      total,
+      sale,
+      client,
+    }
+
+    const key = `recommendation:${recommendation.id}` // Use the generated id for the key
+    await clientRedis.set(key, JSON.stringify(recommendation))
+    return recommendation // Return the full data, including the id
   }
 }

@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { ReferralRepository } from '../referreal-repository'
 import { MongoClient } from '@/lib/mongo'
+import { randomUUID } from 'crypto'
 
 export class MongoReferralRepository implements ReferralRepository {
   async create(data: Prisma.ReferralCreateInput): Promise<{
@@ -16,6 +17,7 @@ export class MongoReferralRepository implements ReferralRepository {
         cpf: data.cpf,
         email: data.email,
         friends: data.friends || [],
+        objectID: randomUUID(),
       })
 
       const savedReferral = await newReferral.save()

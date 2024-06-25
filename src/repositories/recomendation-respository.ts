@@ -1,5 +1,29 @@
-import { Prisma, Recomendation } from '@prisma/client'
+export interface inputData {
+  friendOne: string
+  friendTwo: string
+  client: string
+  sale: string[]
+  total: string | number
+}
 
 export interface RecomendationsRepository {
-  create(data: Prisma.RecomendationCreateInput): Promise<Recomendation>
+  create(data: inputData): Promise<{
+    id: string
+    friendOne: string
+    friendTwo: string
+    client: string
+    sale: string[]
+    total: string | number
+  }>
+
+  get(): Promise<
+    {
+      id: string
+      friendOne: string
+      friendTwo: string
+      client: string
+      sale: string[]
+      total: string | number
+    }[]
+  >
 }

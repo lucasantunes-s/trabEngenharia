@@ -1,5 +1,6 @@
 import { ClientsRepository } from '@/repositories/clients-repository'
 import { OrdersRepository } from '@/repositories/orders-repository'
+import { RecomendationsRepository } from '@/repositories/recomendation-respository'
 import { ReferralRepository } from '@/repositories/referreal-repository'
 import { Client, Order, Referral } from '@prisma/client'
 
@@ -19,6 +20,8 @@ interface RegisterUseCaseResponse {
   client: Client
   order: Order
   referral: Referral
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  recomendation: any
 }
 
 export class RegisterUseCase {
@@ -26,6 +29,7 @@ export class RegisterUseCase {
     private clientsRepository: ClientsRepository,
     private ordersRepository: OrdersRepository,
     private referralRepository: ReferralRepository,
+    private recomendationRepository: RecomendationsRepository,
   ) {}
 
   async execute({
@@ -61,10 +65,22 @@ export class RegisterUseCase {
       email,
     })
 
+    const friendOne = friends[0]
+    const friendTwo = friends[1]
+
+    const recomendation = await this.recomendationRepository.create({
+      client: name,
+      friendOne,
+      friendTwo,
+      sale: product,
+      total,
+    })
+
     return {
       client,
       order,
       referral,
+      recomendation,
     }
   }
 }

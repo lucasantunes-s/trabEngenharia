@@ -17,4 +17,9 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - MONGODB_DATABASE=test
-    
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6379:6379"
